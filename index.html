@@ -1,0 +1,1950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepSyncer - Optimize Your Sleep & Sync Your Schedule 🌙</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #0f0a20 0%, #05030f 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            color: #f0f0f0;
+            padding: 0;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .hero-section {
+            width: 100%;
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 4rem 1rem;
+            background: radial-gradient(circle at center, rgba(255,215,0,0.1) 0%, transparent 70%);
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 20px rgba(255,215,0,0.3);
+            animation: fadeInUp 1s ease-out;
+            z-index: 2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #f0f0f0;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.3s;
+            z-index: 2;
+        }
+
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 40px 70px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 50px 160px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 90px 40px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 130px 80px, #ffffff, rgba(0,0,0,0));
+            background-repeat: repeat;
+            animation: twinkle 4s ease-in-out infinite;
+        }
+
+        .moon {
+            position: absolute;
+            top: 20%;
+            right: 15%;
+            width: 100px;
+            height: 100px;
+            background: #ffd700;
+            border-radius: 50%;
+            box-shadow: 0 0 50px #ffd700;
+            opacity: 0.8;
+            z-index: 1;
+        }
+
+        .calculator-card {
+            background: rgba(15, 10, 32, 0.95);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,215,0,0.1);
+            backdrop-filter: blur(10px);
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease-out 0.6s;
+        }
+
+        .goal-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .goal-option {
+            position: relative;
+        }
+
+        .goal-option input[type="radio"] {
+            display: none;
+        }
+
+        .goal-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,215,0,0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .goal-option input[type="radio"]:checked + label {
+            background: rgba(255,215,0,0.1);
+            border-color: #ffd700;
+            box-shadow: 0 0 20px rgba(255,215,0,0.2);
+        }
+
+        .goal-option .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .goal-option .text {
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            color: #f0f0f0;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0.3;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+        /* Top Navigation Bar */
+        .top-bar {
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed; /* Fixes the top bar at the top */
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        .top-bar .site-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffd700;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+        .top-bar .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .top-bar .nav-links a {
+            color: #f0f0f0;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+        }
+        .top-bar .nav-links a:hover,
+        .top-bar .nav-links a.active {
+            color: #ffd700;
+            background-color: rgba(255, 215, 0, 0.1);
+        }
+        
+        .top-bar .nav-links .coffee-link {
+            background: linear-gradient(45deg, #ff9a00, #ff7b00);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            text-shadow: none;
+            font-weight: 600;
+        }
+        
+        .top-bar .nav-links .coffee-link:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(45deg, #ffa726, #ff9100);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(255, 154, 0, 0.3);
+        }
+        .main-content-wrapper {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            width: 100%;
+            padding: 2rem 1rem;
+            margin-top: 5rem;
+            box-sizing: border-box;
+            min-height: calc(100vh - 5rem);
+            position: relative;
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem; /* Adjusted from 10.5rem to 1.5rem */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            padding: 2.5rem; /* Adjusted from 15.5rem to 2.5rem */
+            max-width: 900px; /* Slightly wider for the timeline */
+            width: 100%;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 0 auto; /* Center the container */
+        }
+        input[type="time"] {
+            display: none; /* Hide the default time input */
+        }
+
+        .time-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .time-selector select,
+        .time-selector input {
+            background-color: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 215, 0, 0.2);
+            color: #f0f0f0;
+            padding: 1rem;
+            font-size: 2rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .time-selector input {
+            width: 5rem;
+            background: rgba(15, 10, 32, 0.8);
+        }
+
+        .time-selector select {
+            width: 6rem;
+            background: rgba(15, 10, 32, 0.8);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffd700' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.7rem center;
+            background-size: 1.2rem;
+            padding-right: 2.5rem;
+        }
+
+        .time-selector select:focus,
+        .time-selector input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.2);
+            transform: scale(1.05);
+        }
+
+        .time-selector .colon {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 2rem;
+            padding: 0 0.25rem;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Style for the custom number inputs */
+        .time-selector input::-webkit-inner-spin-button,
+        .time-selector input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .time-selector input[type="number"] {
+            appearance: textfield;
+            -moz-appearance: textfield;
+        }
+
+        @media (max-width: 768px) {
+            .top-bar {
+                padding: 0.75rem 1rem;
+            }
+            .top-bar .site-name {
+                font-size: 1.2rem;
+            }
+            .top-bar .nav-links {
+                gap: 0.75rem;
+            }
+            .top-bar .nav-links a {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.9rem;
+            }
+            .main-content-wrapper {
+                margin-top: 4rem; /* Adjust for smaller top bar */
+                padding: 1.5rem 0.75rem;
+            }
+            .container, .tips-section {
+                padding: 1.5rem;
+                border-radius: 1rem;
+            }
+            .time-selector {
+                font-size: 1.2rem;
+            }
+            .time-selector select,
+            .time-selector input {
+                padding: 0.5rem;
+                font-size: 1.2rem;
+            }
+            .time-selector input {
+                width: 3.5rem;
+            }
+            .time-selector select {
+                width: 4.5rem;
+            }
+            .result-box h3, .timeline h3, .tips-section h2 {
+                font-size: 1.1rem;
+            }
+            .result-box p {
+                font-size: 1rem;
+            }
+            .radio-group {
+                flex-direction: column;
+                gap: 0.75rem;
+                align-items: flex-start;
+            }
+            .timeline-container {
+                width: 1800px; /* Adjust for smaller screens (75px per hour * 24 hours) */
+                height: 180px; /* Slightly reduced height for mobile */
+            }
+            .timeline-time {
+                font-size: 0.8rem;
+            }
+            .timeline-description {
+                font-size: 0.85rem;
+                max-width: 80px;
+                margin-top: 30px;
+                margin-bottom: 30px; /* For top positioned items */
+            }
+            .timeline-item.pos-bottom {
+                padding-bottom: 15px;
+            }
+            .timeline-item.pos-top {
+                padding-top: 15px;
+            }
+            .tips-section ul li {
+                padding: 0.75rem 1rem;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .tips-section ul li strong {
+                font-size: 1rem;
+                margin-bottom: 0.25rem;
+            }
+            .tips-section ul li p {
+                font-size: 0.9rem;
+            }
+        }
+        button {
+            background: linear-gradient(45deg, #ffd700, #ffed4a);
+            color: #000000;
+            padding: 1.5rem 4rem;
+            border-radius: 1rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.4),
+                        inset 0 0 20px rgba(255, 255, 255, 0.4);
+            margin: 2rem auto;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            backdrop-filter: blur(5px);
+            display: block;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #ffe44d, #fff4a0);
+            color: #000000;
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.6),
+                        inset 0 0 30px rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+            font-weight: 900;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
+            background: linear-gradient(45deg, #ffc700, #ffe44d);
+            color: #000000;
+        }
+        .result-box {
+            background: rgba(15, 10, 32, 0.95);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-top: 3rem;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .result-box h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-box h3::before {
+            content: '✨';
+            font-size: 1.2rem;
+        }
+
+        .result-box p {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            color: #f0f0f0;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .result-box p:hover {
+            background: rgba(255, 215, 0, 0.05);
+            transform: translateX(5px);
+        }
+
+        .result-box p strong {
+            color: #ffd700;
+            margin-right: 1rem;
+            font-weight: 600;
+            min-width: 120px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .error-message {
+            color: #f87171;
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+        .radio-group {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: #f0f0f0;
+        }
+        .radio-group input[type="radio"] {
+            appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid #ffd700;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        .radio-group input[type="radio"]:checked {
+            background-color: #ffd700;
+            border-color: #ffd700;
+        }
+        .radio-group input[type="radio"]:checked::after {
+            content: '';
+            width: 0.5rem;
+            height: 0.5rem;
+            background-color: #0f0a20;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .section-separator {
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            margin: 1.5rem 0;
+        }
+
+        /* Timeline specific styles */
+        .timeline {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: rgba(0, 0, 0, 0.4);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            text-align: left;
+            max-height: 600px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .timeline h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #ffd700;
+            text-align: center;
+        }
+
+        .timeline-container {
+            position: relative;
+            width: 100%;
+            min-height: 800px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(255, 215, 0, 0.2);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            position: relative;
+            width: 100%;
+            padding: 15px 0;
+            display: flex;
+            align-items: center;
+            min-height: 80px;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            width: 16px;
+            height: 16px;
+            background-color: #ffd700;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+            z-index: 1;
+        }
+
+        .timeline-content {
+            width: calc(50% - 30px);
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            background: rgba(255, 215, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: auto;
+            margin-right: 30px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: 30px;
+        }
+
+        .timeline-time {
+            font-weight: 700;
+            color: #ffd700;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .timeline-description {
+            color: #f0f0f0;
+            font-size: 0.95rem;
+        }
+
+        /* Remove old horizontal timeline styles */
+        .hour-marker, .hour-label {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-container::before {
+                left: 30px;
+            }
+
+            .timeline-item {
+                flex-direction: column;
+            }
+
+            .timeline-item::after {
+                left: 30px;
+            }
+
+            .timeline-content {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+            }
+        }
+
+        /* Tips Section Styles */
+        .tips-section {
+            background-color: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            padding: 2.5rem;
+            max-width: 900px;
+            width: 100%;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 2rem auto;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .tips-section h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffd700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .tips-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tips-section ul li {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-radius: 0.75rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .tips-section ul li:last-child {
+            margin-bottom: 0;
+        }
+
+        .tips-section ul li strong {
+            color: #fcd34d;
+            font-size: 1.1rem;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .tips-section ul li p {
+            margin: 0;
+            color: #f0f0f0;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        .quick-tips {
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .quick-tips h3 {
+            color: #ffd700;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .quick-tips ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        .quick-tips li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quick-tips li::before {
+            content: '✨';
+            color: #ffd700;
+        }
+
+        button.calculate-btn {
+            background: linear-gradient(45deg, #ffd700, #ffed4a);
+            color: #000000;
+            padding: 1.5rem 3rem;
+            border-radius: 1rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.4);
+            margin: 2rem auto;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: block;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button.calculate-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.6);
+        }
+
+        button.calculate-btn:active {
+            transform: translateY(1px);
+        }
+
+        .highlight-time {
+            color: #ffd700;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .privacy-link {
+            display: none;
+        }
+
+        .privacy-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .privacy-content {
+            background: rgba(15, 10, 32, 0.95);
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .close-privacy {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .close-privacy:hover {
+            color: #ffd700;
+        }
+
+        /* Initially hide these sections */
+        .initial-hidden {
+            display: none;
+        }
+
+        #homePage, #rhythmPage, #sleepBetterPage {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .timeline-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .download-btn {
+            background: linear-gradient(45deg, #4a90e2, #357abd);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .download-btn.txt-btn {
+            background: linear-gradient(45deg, #4a90e2, #357abd);
+        }
+
+        .download-btn.png-btn {
+            background: linear-gradient(45deg, #43a047, #2e7d32);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(74, 144, 226, 0.5);
+        }
+
+        .download-btn.txt-btn:hover {
+            background: linear-gradient(45deg, #357abd, #2868a5);
+        }
+
+        .download-btn.png-btn:hover {
+            background: linear-gradient(45deg, #2e7d32, #1b5e20);
+        }
+
+        .download-btn:active {
+            transform: translateY(1px);
+        }
+
+        .download-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Remove calendar-related styles */
+        .calendar-section,
+        .calendar-buttons,
+        .calendar-btn,
+        .google-btn,
+        .outlook-btn,
+        .apple-btn,
+        .sync-status,
+        .sync-success,
+        .sync-error {
+            display: none;
+        }
+
+        .footer-links {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #ffd700;
+        }
+
+        .footer-separator {
+            color: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="site-name">SleepSyncer</div>
+        <div class="nav-links">
+            <a href="#" id="homeLink" class="active">Home</a>
+            <a href="#" id="rhythmLink">Sleep Science</a>
+            <a href="#" id="sleepBetterLink">Sleep Better</a>
+        </div>
+    </div>
+
+    <div class="main-content-wrapper">
+        <!-- Home Page -->
+        <div id="homePage" style="display: block;">
+            <div class="hero-section">
+                <div class="stars"></div>
+                <div class="moon"></div>
+                <h1 class="hero-title">Sync Your Sleep & Schedule</h1>
+                <p class="hero-subtitle">Optimize your sleep schedule for better health and productivity</p>
+            </div>
+
+            <div class="container">
+                <div class="calculator-card">
+                    <!-- Calculator content -->
+                    <h2 class="text-2xl font-bold mb-6 text-yellow-300">Sleep Time Calculator</h2>
+                    
+                    <div class="goal-selector">
+                        <div class="goal-option" data-type="wakeUp">
+                            <input type="radio" name="calculationType" value="wakeUp" id="wakeUpOption" checked>
+                            <label for="wakeUpOption">
+                                <span class="icon">⏰</span>
+                                <span class="text">I want to wake up at</span>
+                            </label>
+                        </div>
+                        <div class="goal-option" data-type="goToSleep">
+                            <input type="radio" name="calculationType" value="goToSleep" id="goToSleepOption">
+                            <label for="goToSleepOption">
+                                <span class="icon">🌙</span>
+                                <span class="text">I want to go to sleep at</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <input type="time" id="inputTime" value="06:00" style="display: none;">
+                    <div class="time-selector">
+                        <input type="number" id="hourInput" min="1" max="12" placeholder="HH">
+                        <span class="colon">:</span>
+                        <input type="number" id="minuteInput" min="0" max="59" placeholder="MM">
+                        <select id="ampmSelect">
+                            <option value="AM">AM</option>
+                            <option value="PM">PM</option>
+                        </select>
+                    </div>
+
+                    <button class="calculate-btn" onclick="calculateCycles()">Calculate My Sleep Schedule</button>
+
+                    <div id="results" class="result-box" style="display: none;">
+                        <h3 id="sleepWakeResultsTitle"></h3>
+                        <div id="timeSuggestions"></div>
+
+                        <div class="section-separator"></div>
+
+                        <h3 id="mealTimesTitle" class="text-yellow-300">Optimal Meal Times:</h3>
+                        <div id="mealTimeSuggestions"></div>
+
+                        <div class="section-separator"></div>
+
+                        <h3 id="activityTimesTitle" class="text-yellow-300">Optimal Activity Times:</h3>
+                        <div id="activityTimeSuggestions"></div>
+                    </div>
+
+                    <div id="timeline" class="timeline" style="display: none;">
+                        <div class="timeline-header">
+                            <h3>Your Daily Circadian Timeline</h3>
+                            <div class="download-buttons">
+                                <button class="download-btn txt-btn" onclick="downloadTimeline('txt')">
+                                    <span class="download-icon">📄</span> Download as TXT
+                                </button>
+                                <button class="download-btn png-btn" onclick="downloadTimeline('png')">
+                                    <span class="download-icon">🖼️</span> Download as PNG
+                                </button>
+                            </div>
+                        </div>
+                        <div id="timelineItems" class="timeline-container"></div>
+                    </div>
+
+                    <style>
+                        .download-btn {
+                            background: linear-gradient(45deg, #4a90e2, #357abd);
+                            color: white;
+                            padding: 1rem 2rem;
+                            border-radius: 0.5rem;
+                            font-size: 1.1rem;
+                            font-weight: 600;
+                            transition: all 0.3s ease;
+                            cursor: pointer;
+                            border: none;
+                            box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
+                            margin: 2rem auto 1rem;
+                            text-transform: uppercase;
+                            letter-spacing: 1px;
+                            display: block;
+                            width: 100%;
+                            max-width: 300px;
+                        }
+
+                        .download-btn:hover {
+                            transform: translateY(-2px);
+                            box-shadow: 0 0 30px rgba(74, 144, 226, 0.5);
+                            background: linear-gradient(45deg, #357abd, #2868a5);
+                        }
+
+                        .download-btn:active {
+                            transform: translateY(1px);
+                        }
+                    </style>
+                </div>
+            </div>
+        </div>
+
+        <!-- Circadian Rhythm Page -->
+        <div id="rhythmPage" class="tips-section" style="display: none;">
+            <h2>Understanding Your Circadian Rhythm</h2>
+            <div class="quick-tips">
+                <h3>🌟 What is Circadian Rhythm?</h3>
+                <p class="mb-4">Your circadian rhythm is your body's internal 24-hour clock that regulates various biological processes, including sleep-wake cycles, hormone production, body temperature, and metabolism.</p>
+                
+                <div class="timeline">
+                    <h3>24-Hour Circadian Cycle</h3>
+                    <div class="tips-section">
+                        <h3>🌅 6:00 AM - 9:00 AM</h3>
+                        <ul>
+                            <li><strong>Cortisol Release:</strong> Highest cortisol levels to help you wake up</li>
+                            <li><strong>Body Temperature:</strong> Begins to rise</li>
+                            <li><strong>Alertness:</strong> Gradually increases</li>
+                        </ul>
+
+                        <h3>🌞 9:00 AM - 2:00 PM</h3>
+                        <ul>
+                            <li><strong>Peak Alertness:</strong> Best time for focused work</li>
+                            <li><strong>Cognitive Performance:</strong> Highest levels of concentration</li>
+                            <li><strong>Body Temperature:</strong> Continues to rise</li>
+                        </ul>
+
+                        <h3>☀️ 2:00 PM - 6:00 PM</h3>
+                        <ul>
+                            <li><strong>Coordination Peak:</strong> Best time for physical activities</li>
+                            <li><strong>Body Temperature:</strong> Reaches maximum</li>
+                            <li><strong>Reaction Time:</strong> Fastest during this period</li>
+                        </ul>
+
+                        <h3>🌆 6:00 PM - 10:00 PM</h3>
+                        <ul>
+                            <li><strong>Body Temperature:</strong> Begins to drop</li>
+                            <li><strong>Melatonin:</strong> Production begins</li>
+                            <li><strong>Metabolism:</strong> Starts to slow down</li>
+                        </ul>
+
+                        <h3>🌙 10:00 PM - 2:00 AM</h3>
+                        <ul>
+                            <li><strong>Melatonin:</strong> Peak production</li>
+                            <li><strong>Body Temperature:</strong> Continues dropping</li>
+                            <li><strong>Deep Sleep:</strong> Most likely to occur</li>
+                        </ul>
+
+                        <h3>🌑 2:00 AM - 6:00 AM</h3>
+                        <ul>
+                            <li><strong>Body Temperature:</strong> Lowest point</li>
+                            <li><strong>Melatonin:</strong> High levels maintained</li>
+                            <li><strong>REM Sleep:</strong> Most common during this period</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section-separator"></div>
+
+                <h3>🧬 Key Components of Circadian Rhythm</h3>
+                <ul>
+                    <li>
+                        <strong>Suprachiasmatic Nucleus (SCN):</strong>
+                        <p>The master clock in your brain that coordinates all biological rhythms</p>
+                    </li>
+                    <li>
+                        <strong>Light Exposure:</strong>
+                        <p>The primary zeitgeber (time cue) that synchronizes your internal clock with the environment</p>
+                    </li>
+                    <li>
+                        <strong>Melatonin:</strong>
+                        <p>The sleep hormone that rises in the evening and falls in the morning</p>
+                    </li>
+                    <li>
+                        <strong>Cortisol:</strong>
+                        <p>The wake-up hormone that peaks in the early morning</p>
+                    </li>
+                </ul>
+
+                <div class="section-separator"></div>
+
+                <h3>🔄 Factors That Affect Your Circadian Rhythm</h3>
+                <ul>
+                    <li>
+                        <strong>Light Exposure:</strong>
+                        <p>Natural and artificial light can shift your internal clock</p>
+                    </li>
+                    <li>
+                        <strong>Meal Timing:</strong>
+                        <p>When you eat can influence your body's internal timing</p>
+                    </li>
+                    <li>
+                        <strong>Exercise:</strong>
+                        <p>Physical activity can help strengthen your circadian rhythm</p>
+                    </li>
+                    <li>
+                        <strong>Social Interactions:</strong>
+                        <p>Social cues can impact your body's timing system</p>
+                    </li>
+                    <li>
+                        <strong>Travel:</strong>
+                        <p>Crossing time zones can disrupt your natural rhythm (jet lag)</p>
+                    </li>
+                    <li>
+                        <strong>Work Schedule:</strong>
+                        <p>Shift work can cause misalignment with natural light-dark cycles</p>
+                    </li>
+                </ul>
+
+                <div class="section-separator"></div>
+
+                <h3>🎯 Optimizing Your Circadian Rhythm</h3>
+                <ul>
+                    <li>
+                        <strong>Consistent Schedule:</strong>
+                        <p>Maintain regular sleep and wake times, even on weekends</p>
+                    </li>
+                    <li>
+                        <strong>Morning Light:</strong>
+                        <p>Get exposure to bright light within the first hour of waking</p>
+                    </li>
+                    <li>
+                        <strong>Evening Routine:</strong>
+                        <p>Dim lights and avoid blue light 2-3 hours before bed</p>
+                    </li>
+                    <li>
+                        <strong>Strategic Eating:</strong>
+                        <p>Time meals to support your natural rhythm</p>
+                    </li>
+                    <li>
+                        <strong>Exercise Timing:</strong>
+                        <p>Schedule workouts to enhance rather than disrupt your rhythm</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Sleep Better Page -->
+        <div id="sleepBetterPage" class="tips-section" style="display: none;">
+            <h2>Sleep Better: Your Guide to Restful Nights</h2>
+            <div class="quick-tips">
+                <h3>🌙 Essential Sleep Tips</h3>
+                <ul>
+                    <li>
+                        <strong>Consistent Schedule</strong>
+                        <p>Go to bed and wake up at the same time every day, even on weekends. This helps regulate your body's internal clock.</p>
+                    </li>
+                    <li>
+                        <strong>Ideal Sleep Environment</strong>
+                        <p>Keep your bedroom dark, quiet, and cool (18-20°C/60-67°F). Use blackout curtains and consider white noise machines if needed.</p>
+                    </li>
+                    <li>
+                        <strong>Digital Sunset</strong>
+                        <p>Avoid screens 1-2 hours before bed. Blue light from devices can suppress melatonin production.</p>
+                    </li>
+                </ul>
+
+                <div class="section-separator"></div>
+
+                <h3>🛏️ Bedtime Routine</h3>
+                <ul>
+                    <li>
+                        <strong>Wind Down Time</strong>
+                        <p>Start relaxing 30-60 minutes before bed with calming activities like reading or gentle stretching.</p>
+                    </li>
+                    <li>
+                        <strong>Breathing Exercises</strong>
+                        <p>Try the 4-7-8 breathing technique: Inhale for 4 seconds, hold for 7, exhale for 8.</p>
+                    </li>
+                    <li>
+                        <strong>Aromatherapy</strong>
+                        <p>Use calming scents like lavender or chamomile to signal bedtime to your body.</p>
+                    </li>
+                </ul>
+
+                <div class="section-separator"></div>
+
+                <h3>🍽️ Diet and Exercise</h3>
+                <ul>
+                    <li>
+                        <strong>Evening Meals</strong>
+                        <p>Eat dinner at least 2-3 hours before bedtime. Avoid heavy, spicy, or acidic foods late at night.</p>
+                    </li>
+                    <li>
+                        <strong>Caffeine Cutoff</strong>
+                        <p>Stop consuming caffeine 6-8 hours before bedtime, including coffee, tea, and chocolate.</p>
+                    </li>
+                    <li>
+                        <strong>Exercise Timing</strong>
+                        <p>Regular exercise helps sleep, but finish intense workouts at least 3 hours before bed.</p>
+                    </li>
+                </ul>
+
+                <div class="section-separator"></div>
+
+                <h3>🧘‍♂️ Relaxation Techniques</h3>
+                <ul>
+                    <li>
+                        <strong>Progressive Relaxation</strong>
+                        <p>Tense and relax each muscle group from toes to head, promoting physical relaxation.</p>
+                    </li>
+                    <li>
+                        <strong>Mindfulness Meditation</strong>
+                        <p>Focus on your breath and present moment to calm a racing mind.</p>
+                    </li>
+                    <li>
+                        <strong>Visualization</strong>
+                        <p>Imagine a peaceful, calming place to help transition into sleep.</p>
+                    </li>
+                </ul>
+
+                <div class="section-separator"></div>
+
+                <h3>⚡ When You Can't Sleep</h3>
+                <ul>
+                    <li>
+                        <strong>15-Minute Rule</strong>
+                        <p>If you can't sleep after 15 minutes, get up and do a calming activity until you feel sleepy.</p>
+                    </li>
+                    <li>
+                        <strong>Avoid Clock Watching</strong>
+                        <p>Turn your clock away and resist checking the time when you wake up at night.</p>
+                    </li>
+                    <li>
+                        <strong>Keep a Sleep Diary</strong>
+                        <p>Track your sleep patterns and habits to identify what works best for you.</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Policy Modal -->
+    <div class="privacy-modal" id="privacyModal">
+        <div class="privacy-content">
+            <span class="close-privacy" onclick="closePrivacy()">&times;</span>
+            <h2 class="text-2xl font-bold mb-4 text-yellow-300">Privacy Policy</h2>
+            <div class="privacy-text">
+                <p class="mb-4">Last updated: 2024</p>
+
+                <!-- Introduction -->
+                <h3 class="text-xl font-bold mb-2 text-yellow-300">Introduction</h3>
+                <p class="mb-4">Welcome to the SleepSyncer. We are committed to protecting your privacy and ensuring you have a positive experience on our website. This privacy policy outlines our practices regarding your information and how we protect your privacy.</p>
+
+                <!-- Data Collection Statement -->
+                <h3 class="text-xl font-bold mb-2 text-yellow-300">Data Collection Statement</h3>
+                <p class="mb-4">We want to be clear: we do not collect, store, or process any personal data. Our calculator operates entirely within your browser, and no information is transmitted to or stored on our servers.</p>
+
+                <!-- Cookies & Tracking -->
+                <h3 class="text-xl font-bold mb-2 text-yellow-300">Cookies & Tracking</h3>
+                <p class="mb-4">Our website does not use cookies, analytics, or any tracking technologies. Your usage of the calculator is completely private and we maintain no records of your calculations or preferences.</p>
+
+                <!-- Third-Party Services -->
+                <h3 class="text-xl font-bold mb-2 text-yellow-300">Third-Party Services</h3>
+                <p class="mb-4">We do not integrate with or utilize any third-party services that could collect or process your data. All calculations and operations are performed locally in your web browser.</p>
+
+                <!-- Children's Privacy -->
+                <h3 class="text-xl font-bold mb-2 text-yellow-300">Children's Privacy</h3>
+                <p class="mb-4">While our service is available to users of all ages, we do not knowingly collect or maintain information from persons under 13 years of age. If you are under 13, please use this service with parental guidance.</p>
+
+                <!-- Terms of Service -->
+                <h3 class="text-xl font-bold mb-2 text-yellow-300">Terms of Service</h3>
+                <div class="mb-4">
+                    <p class="mb-2"><strong>Acceptance of Terms:</strong> By using this website, you accept these terms and our privacy practices.</p>
+                    <p class="mb-2"><strong>Service Description:</strong> We provide a Circadian Cycle Calculator to help optimize sleep schedules. This tool is for informational purposes only and should not replace professional medical advice.</p>
+                    <p class="mb-2"><strong>User Responsibilities:</strong> Users are expected to provide accurate inputs for calculations and use the service in compliance with applicable laws.</p>
+                    <p class="mb-2"><strong>Intellectual Property:</strong> All content, design, and functionality of this website are our exclusive property and are protected by international copyright laws.</p>
+                    <p class="mb-2"><strong>Disclaimer:</strong> The service is provided "as-is" without any warranties. We are not responsible for any decisions made based on the calculator's results.</p>
+                    <p class="mb-2"><strong>Liability:</strong> We shall not be liable for any damages arising from the use or inability to use our service.</p>
+                    <p class="mb-2"><strong>Governing Law:</strong> These terms are governed by the laws of the jurisdiction in which we operate.</p>
+                </div>
+
+                <!-- Changes to the Policy -->
+                <h3 class="text-xl font-bold mb-2 text-yellow-300">Changes to the Policy</h3>
+                <p class="mb-4">We reserve the right to update this privacy policy and terms of service at any time. Any significant changes will be reflected in the "Last updated" date at the top of this policy.</p>
+
+                <!-- Contact Information -->
+                <h3 class="text-xl font-bold mb-2 text-yellow-300">Contact Information</h3>
+                <p class="mb-4">If you have any questions about this Privacy Policy or Terms of Service, please contact us at:</p>
+                <p>Email: privacy@circadiannavigator.com</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div class="privacy-modal" id="termsModal">
+        <div class="privacy-content">
+            <span class="close-privacy" onclick="closeTerms()">&times;</span>
+            <h2 class="text-2xl font-bold mb-4 text-yellow-300">Terms of Service</h2>
+            <div class="terms-text">
+                <p class="mb-4">Last updated: 2024</p>
+
+                <h3 class="text-xl font-bold mb-2 text-yellow-300">1. Acceptance of Terms</h3>
+                <p class="mb-4">By accessing and using SleepSyncer ("the Service"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.</p>
+
+                <h3 class="text-xl font-bold mb-2 text-yellow-300">2. Description of Service</h3>
+                <p class="mb-4">SleepSyncer provides a web-based calculator and information service designed to help users optimize their sleep schedules and understand their circadian rhythms. The Service is provided for informational purposes only and should not be considered medical advice.</p>
+
+                <h3 class="text-xl font-bold mb-2 text-yellow-300">3. User Responsibilities</h3>
+                <p class="mb-4">Users agree to:</p>
+                <ul class="list-disc pl-6 mb-4">
+                    <li>Provide accurate information when using the calculator</li>
+                    <li>Use the Service in compliance with all applicable laws</li>
+                    <li>Not misuse or attempt to manipulate the Service</li>
+                    <li>Not use the Service for any illegal or unauthorized purpose</li>
+                </ul>
+
+                <h3 class="text-xl font-bold mb-2 text-yellow-300">4. Medical Disclaimer</h3>
+                <p class="mb-4">The Service is not intended to provide medical advice. The information provided is for general informational purposes only. Always consult with a qualified healthcare provider regarding any medical conditions or health concerns.</p>
+
+                <h3 class="text-xl font-bold mb-2 text-yellow-300">5. Intellectual Property</h3>
+                <p class="mb-4">All content, features, and functionality of the Service, including but not limited to text, graphics, logos, and code, are the exclusive property of SleepSyncer and are protected by international copyright laws.</p>
+
+                <h3 class="text-xl font-bold mb-2 text-yellow-300">6. Limitation of Liability</h3>
+                <p class="mb-4">The Service is provided "as is" without any warranties. We shall not be liable for any damages arising from the use or inability to use our Service. Users acknowledge that any reliance on the Service is at their own risk.</p>
+
+                <h3 class="text-xl font-bold mb-2 text-yellow-300">7. Changes to Terms</h3>
+                <p class="mb-4">We reserve the right to modify these terms at any time. Continued use of the Service after any modifications indicates acceptance of the updated terms.</p>
+
+                <h3 class="text-xl font-bold mb-2 text-yellow-300">8. Termination</h3>
+                <p class="mb-4">We reserve the right to terminate or suspend access to the Service without prior notice for any conduct that we believe violates these Terms or is harmful to other users or us.</p>
+
+                <h3 class="text-xl font-bold mb-2 text-yellow-300">9. Governing Law</h3>
+                <p class="mb-4">These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which we operate, without regard to its conflict of law provisions.</p>
+
+                <h3 class="text-xl font-bold mb-2 text-yellow-300">10. Contact</h3>
+                <p class="mb-4">For any questions about these Terms of Service, please contact us through our website or official communication channels.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-links">
+        <a href="#" class="footer-link" onclick="showPrivacy(event)">Privacy Policy</a>
+        <span class="footer-separator">|</span>
+        <a href="#" class="footer-link" onclick="showTerms(event)">Terms of Service</a>
+    </div>
+
+    <script>
+        const PIXELS_PER_HOUR = 100; // 100 pixels per hour
+        const PIXELS_PER_MINUTE = PIXELS_PER_HOUR / 60;
+
+        // Function to format time from minutes past midnight to HH:MM AM/PM
+        function formatTime(minutes) {
+            // Ensure minutes is a positive number within 24 hours
+            minutes = ((minutes % (24 * 60)) + (24 * 60)) % (24 * 60);
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = hours % 12 || 12;
+            const displayMins = mins < 10 ? '0' + mins : mins;
+            return `${displayHours}:${displayMins} ${ampm}`;
+        }
+
+        // Function to calculate and display the circadian cycles and other activities
+        function calculateCycles() {
+            const inputTimeElement = document.getElementById('inputTime');
+            const resultsDiv = document.getElementById('results');
+            const sleepWakeResultsTitle = document.getElementById('sleepWakeResultsTitle');
+            const timeSuggestionsDiv = document.getElementById('timeSuggestions');
+            const mealTimeSuggestionsDiv = document.getElementById('mealTimeSuggestions');
+            const activityTimeSuggestionsDiv = document.getElementById('activityTimeSuggestions');
+            const errorMessage = document.createElement('div');
+            errorMessage.id = 'errorMessage';
+            errorMessage.classList.add('error-message', 'hidden');
+            resultsDiv.appendChild(errorMessage);
+            
+            const calculationType = document.querySelector('input[name="calculationType"]:checked').value;
+            const timelineDiv = document.getElementById('timeline');
+            const timelineItemsDiv = document.getElementById('timelineItems');
+
+            // Clear previous results and errors
+            timeSuggestionsDiv.innerHTML = '';
+            mealTimeSuggestionsDiv.innerHTML = '';
+            activityTimeSuggestionsDiv.innerHTML = '';
+            timelineItemsDiv.innerHTML = '';
+            errorMessage.classList.add('hidden');
+            
+            // Show the results and timeline
+            resultsDiv.style.display = 'block';
+            timelineDiv.style.display = 'block';
+
+            const inputTime = inputTimeElement.value;
+
+            if (!inputTime) {
+                errorMessage.textContent = 'Please select a time.';
+                errorMessage.classList.remove('hidden');
+                return;
+            }
+
+            // Parse input time and handle validation
+            const [hours, minutes] = inputTime.split(':').map(Number);
+            if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+                errorMessage.textContent = 'Please enter a valid time.';
+                errorMessage.classList.remove('hidden');
+                return;
+            }
+
+            let inputMinutesPastMidnight = (hours * 60) + minutes;
+
+            const sleepCycleDuration = 90; // minutes
+            const timeToFallAsleep = 14; // minutes
+
+            let sleepWakeSuggestions = [];
+            let referenceWakeUpMinutes;
+            let referenceBedtimeMinutes;
+
+            if (calculationType === 'wakeUp') {
+                // User wants to wake up at a specific time, suggest bedtimes
+                sleepWakeResultsTitle.textContent = 'Optimal Bedtimes:';
+                let effectiveWakeUpTime = inputMinutesPastMidnight - timeToFallAsleep;
+
+                // Calculate 6, 5, 4, and 3 sleep cycles back
+                for (let i = 6; i >= 3; i--) {
+                    let bedtimeMinutes = effectiveWakeUpTime - (i * sleepCycleDuration);
+                    // Handle times that wrap around to the previous day
+                    if (bedtimeMinutes < 0) {
+                        bedtimeMinutes += (24 * 60); // Add a full day in minutes
+                    }
+                    sleepWakeSuggestions.push({ cycles: i, time: formatTime(bedtimeMinutes) });
+                }
+                referenceWakeUpMinutes = inputMinutesPastMidnight;
+                // For other activities, use the 5-cycle bedtime as a reference
+                // Ensure it wraps correctly if the calculated bedtime is on the previous day relative to now
+                let assumedEffectiveWakeUpForRef = inputMinutesPastMidnight;
+                if (inputMinutesPastMidnight < 240) { // If wake-up is early morning (e.g., before 4 AM), consider it next day for bedtime reference
+                     assumedEffectiveWakeUpForRef += (24 * 60);
+                }
+                referenceBedtimeMinutes = (assumedEffectiveWakeUpForRef - (5 * sleepCycleDuration) - timeToFallAsleep + (24 * 60)) % (24 * 60);
+
+            } else {
+                // User wants to go to sleep at a specific time, suggest wake-up times
+                sleepWakeResultsTitle.textContent = 'Optimal Wake-up Times:';
+                let effectiveSleepTime = inputMinutesPastMidnight + timeToFallAsleep;
+
+                // Calculate 3, 4, 5, and 6 sleep cycles forward
+                for (let i = 3; i <= 6; i++) {
+                    let wakeUpTimeMinutes = effectiveSleepTime + (i * sleepCycleDuration);
+                    // Handle times that wrap around to the next day
+                    wakeUpTimeMinutes = wakeUpTimeMinutes % (24 * 60);
+                    sleepWakeSuggestions.push({ cycles: i, time: formatTime(wakeUpTimeMinutes) });
+                }
+                referenceBedtimeMinutes = inputMinutesPastMidnight;
+                // For other activities, use the 5-cycle wake-up time as a reference
+                referenceWakeUpMinutes = (effectiveSleepTime + (5 * sleepCycleDuration)) % (24 * 60);
+            }
+
+            // Display sleep/wake suggestions
+            sleepWakeSuggestions.forEach(suggestion => {
+                const p = document.createElement('p');
+                p.innerHTML = `<strong>${suggestion.cycles} cycles:</strong> ${suggestion.time}`;
+                timeSuggestionsDiv.appendChild(p);
+            });
+
+            // --- Calculate and Display Meal Times ---
+            const mealTimes = [
+                { name: 'Breakfast', offset: 30 }, // 30 mins after wake-up
+                { name: 'Lunch', offset: 360 },    // 6 hours after wake-up
+                { name: 'Dinner', offset: -240 }   // 4 hours before bedtime
+            ];
+
+            const calculatedMealTimes = [];
+            mealTimes.forEach(meal => {
+                let mealTimeMinutes;
+                if (meal.name === 'Dinner') {
+                    mealTimeMinutes = (referenceBedtimeMinutes + meal.offset + (24 * 60)) % (24 * 60);
+                } else {
+                    mealTimeMinutes = (referenceWakeUpMinutes + meal.offset + (24 * 60)) % (24 * 60);
+                }
+                calculatedMealTimes.push({ name: meal.name, time: mealTimeMinutes });
+                const p = document.createElement('p');
+                p.innerHTML = `<strong>${meal.name}:</strong> ${formatTime(mealTimeMinutes)}`;
+                mealTimeSuggestionsDiv.appendChild(p);
+            });
+
+            // --- Calculate and Display Activity Times ---
+            const activityTimes = [
+                { name: 'Morning Exercise', offset: 90 }, // 1.5 hours after wake-up
+                { name: 'Peak Focus/Work', offset: 120 },  // 2 hours after wake-up
+                { name: 'Afternoon Exercise', offset: 540 }, // 9 hours after wake-up
+                { name: 'Relaxation/Wind-down', offset: -90 } // 1.5 hours before bedtime
+            ];
+
+            const calculatedActivityTimes = [];
+            activityTimes.forEach(activity => {
+                let activityTimeMinutes;
+                if (activity.name === 'Relaxation/Wind-down') {
+                    activityTimeMinutes = (referenceBedtimeMinutes + activity.offset + (24 * 60)) % (24 * 60);
+                } else {
+                    activityTimeMinutes = (referenceWakeUpMinutes + activity.offset + (24 * 60)) % (24 * 60);
+                }
+                calculatedActivityTimes.push({ name: activity.name, time: activityTimeMinutes });
+                const p = document.createElement('p');
+                p.innerHTML = `<strong>${activity.name}:</strong> ${formatTime(activityTimeMinutes)}`;
+                activityTimeSuggestionsDiv.appendChild(p);
+            });
+
+            // --- Generate Timeline ---
+            const timelineEvents = [];
+
+            // Add Sleep/Wake times based on the chosen reference
+            if (calculationType === 'wakeUp') {
+                timelineEvents.push({ time: referenceBedtimeMinutes, description: 'Go to Sleep (Optimal 5-cycle bedtime)' });
+                timelineEvents.push({ time: referenceWakeUpMinutes, description: 'Wake Up (Your target wake-up time)' });
+            } else {
+                timelineEvents.push({ time: referenceBedtimeMinutes, description: 'Go to Sleep (Your target bedtime)' });
+                timelineEvents.push({ time: referenceWakeUpMinutes, description: 'Wake Up (Optimal 5-cycle wake-up)' });
+            }
+
+            // Add Meal times
+            calculatedMealTimes.forEach(meal => {
+                timelineEvents.push({ time: meal.time, description: `${meal.name} Time` });
+            });
+
+            // Add Activity times
+            calculatedActivityTimes.forEach(activity => {
+                timelineEvents.push({ time: activity.time, description: activity.name });
+            });
+
+            // Sort events by time
+            timelineEvents.sort((a, b) => a.time - b.time);
+
+            // Filter out duplicate times and combine descriptions
+            const uniqueTimelineEvents = [];
+            if (timelineEvents.length > 0) {
+                uniqueTimelineEvents.push(timelineEvents[0]);
+                for (let i = 1; i < timelineEvents.length; i++) {
+                    const currentEvent = timelineEvents[i];
+                    const lastUniqueEvent = uniqueTimelineEvents[uniqueTimelineEvents.length - 1];
+
+                    // Check if the current event's time is very close (e.g., within 5 minutes)
+                    // If so, combine descriptions to avoid overlapping dots for the same time
+                    if (Math.abs(currentEvent.time - lastUniqueEvent.time) < 5) {
+                        lastUniqueEvent.description += `, ${currentEvent.description}`;
+                    } else {
+                        uniqueTimelineEvents.push(currentEvent);
+                    }
+                }
+            }
+
+            // Clear previous timeline items
+            timelineItemsDiv.innerHTML = '';
+
+            // Add timeline events
+            uniqueTimelineEvents.forEach(event => {
+                const item = document.createElement('div');
+                item.classList.add('timeline-item');
+
+                const content = document.createElement('div');
+                content.classList.add('timeline-content');
+
+                const timeSpan = document.createElement('div');
+                timeSpan.classList.add('timeline-time');
+                timeSpan.textContent = formatTime(event.time);
+
+                const descriptionDiv = document.createElement('div');
+                descriptionDiv.classList.add('timeline-description');
+                descriptionDiv.textContent = event.description;
+
+                content.appendChild(timeSpan);
+                content.appendChild(descriptionDiv);
+                item.appendChild(content);
+                timelineItemsDiv.appendChild(item);
+            });
+        }
+
+        // Navigation logic
+        const homePage = document.getElementById('homePage');
+        const rhythmPage = document.getElementById('rhythmPage');
+        const sleepBetterPage = document.getElementById('sleepBetterPage');
+        const homeLink = document.getElementById('homeLink');
+        const rhythmLink = document.getElementById('rhythmLink');
+        const sleepBetterLink = document.getElementById('sleepBetterLink');
+
+        function showPage(pageId) {
+            // Hide all pages first
+            const pages = ['homePage', 'rhythmPage', 'sleepBetterPage'];
+            pages.forEach(page => {
+                document.getElementById(page).style.display = 'none';
+            });
+            
+            // Remove active class from all links
+            const links = ['homeLink', 'rhythmLink', 'sleepBetterLink'];
+            links.forEach(link => {
+                document.getElementById(link).classList.remove('active');
+            });
+
+            // Show the selected page and activate corresponding link
+            document.getElementById(pageId).style.display = 'block';
+            
+            if (pageId === 'homePage') {
+                document.getElementById('homeLink').classList.add('active');
+                history.pushState({ page: 'home' }, '', '#home');
+                calculateCycles();
+            } else if (pageId === 'rhythmPage') {
+                document.getElementById('rhythmLink').classList.add('active');
+                history.pushState({ page: 'rhythm' }, '', '#rhythm');
+            } else if (pageId === 'sleepBetterPage') {
+                document.getElementById('sleepBetterLink').classList.add('active');
+                history.pushState({ page: 'sleep' }, '', '#sleep');
+            }
+        }
+
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', function(event) {
+            if (event.state && event.state.page === 'rhythm') {
+                showPage('rhythmPage');
+            } else if (event.state && event.state.page === 'sleep') {
+                showPage('sleepBetterPage');
+            } else {
+                showPage('homePage');
+            }
+        });
+
+        // Add click event listeners to navigation links
+        document.getElementById('homeLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('homePage');
+        });
+
+        document.getElementById('rhythmLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('rhythmPage');
+        });
+
+        document.getElementById('sleepBetterLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('sleepBetterPage');
+        });
+
+        // Set initial state when page loads
+        window.onload = function() {
+            const hourInput = document.getElementById('hourInput');
+            const minuteInput = document.getElementById('minuteInput');
+            const ampmSelect = document.getElementById('ampmSelect');
+            const timeInput = document.getElementById('inputTime');
+            
+            // Set default time to 6:00 AM
+            hourInput.value = '6';
+            minuteInput.value = '00';
+            ampmSelect.value = 'AM';
+            timeInput.value = '06:00';
+
+            // Add event listeners
+            hourInput.addEventListener('input', updateTime);
+            minuteInput.addEventListener('input', updateTime);
+            ampmSelect.addEventListener('change', updateTime);
+
+            // Add input validation
+            hourInput.addEventListener('blur', function() {
+                let val = parseInt(this.value) || 1;
+                val = Math.min(12, Math.max(1, val));
+                this.value = val;
+                updateTime();
+            });
+
+            minuteInput.addEventListener('blur', function() {
+                let val = parseInt(this.value) || 0;
+                val = Math.min(59, Math.max(0, val));
+                this.value = val.toString().padStart(2, '0');
+                updateTime();
+            });
+
+            // Check URL hash for initial page
+            // Hide results initially
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('timeline').style.display = 'none';
+
+            if (window.location.hash === '#rhythm') {
+                showPage('rhythmPage');
+            } else if (window.location.hash === '#sleep') {
+                showPage('sleepBetterPage');
+            } else if (window.location.hash === '#calendar') {
+                showPage('calendarPage');
+            } else {
+                history.replaceState({ page: 'home' }, '', '#home');
+                showPage('homePage');
+            }
+        };
+
+        // Function to update the hidden time input and recalculate
+        function updateTime() {
+            const hourInput = document.getElementById('hourInput');
+            const minuteInput = document.getElementById('minuteInput');
+            const ampmSelect = document.getElementById('ampmSelect');
+            const timeInput = document.getElementById('inputTime');
+
+            let hours = parseInt(hourInput.value) || 12;
+            let minutes = parseInt(minuteInput.value) || 0;
+            const ampm = ampmSelect.value;
+
+            // Convert to 24-hour format
+            if (ampm === 'PM' && hours !== 12) hours += 12;
+            if (ampm === 'AM' && hours === 12) hours = 0;
+
+            // Update hidden input
+            timeInput.value = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        }
+
+        // Add these functions for privacy modal
+        function showPrivacy(event) {
+            event.preventDefault();
+            document.getElementById('privacyModal').style.display = 'flex';
+        }
+
+        function closePrivacy() {
+            document.getElementById('privacyModal').style.display = 'none';
+        }
+
+        function downloadTimeline(format) {
+            if (format === 'txt') {
+                downloadTimelineTxt();
+            } else if (format === 'png') {
+                downloadTimelinePng();
+            }
+        }
+
+        function downloadTimelineTxt() {
+            // Get all timeline events
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            let timelineText = "My Circadian Timeline\n";
+            timelineText += "===================\n\n";
+            
+            // Add wake/sleep times
+            const sleepWakeTitle = document.getElementById('sleepWakeResultsTitle').textContent;
+            const timeSuggestions = document.getElementById('timeSuggestions').innerText;
+            timelineText += sleepWakeTitle + "\n";
+            timelineText += timeSuggestions + "\n\n";
+            
+            // Add meal times
+            timelineText += "Optimal Meal Times:\n";
+            timelineText += document.getElementById('mealTimeSuggestions').innerText + "\n\n";
+            
+            // Add activity times
+            timelineText += "Optimal Activity Times:\n";
+            timelineText += document.getElementById('activityTimeSuggestions').innerText + "\n\n";
+            
+            // Add daily timeline
+            timelineText += "Detailed Daily Timeline:\n";
+            timelineText += "=====================\n";
+            timelineItems.forEach(item => {
+                const time = item.querySelector('.timeline-time').textContent;
+                const description = item.querySelector('.timeline-description').textContent;
+                timelineText += `${time}: ${description}\n`;
+            });
+            
+            // Add recommendations
+            timelineText += "\nRecommendations:\n";
+            timelineText += "===============\n";
+            timelineText += "1. Try to maintain this schedule consistently, even on weekends\n";
+            timelineText += "2. Adjust meal times to align with your natural rhythm\n";
+            timelineText += "3. Plan workouts during peak energy periods\n";
+            timelineText += "4. Wind down activities 2-3 hours before bedtime\n";
+            
+            // Create and trigger download
+            const blob = new Blob([timelineText], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'my_circadian_timeline.txt';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+
+        function downloadTimelinePng() {
+            const timeline = document.getElementById('timeline');
+            
+            // Create a clone of the timeline to modify for the image
+            const timelineClone = timeline.cloneNode(true);
+            
+            // Reset styles that might affect rendering
+            timelineClone.style.cssText = `
+                display: block !important;
+                position: fixed !important;
+                left: -9999px !important;
+                top: 0 !important;
+                background: #0f0a20 !important;
+                padding: 2rem !important;
+                border-radius: 1rem !important;
+                width: 800px !important;
+                max-height: none !important;
+                overflow: visible !important;
+                z-index: -9999 !important;
+            `;
+            
+            // Also reset the inner timeline container's scroll/height constraints
+            const timelineContainer = timelineClone.querySelector('.timeline-container');
+            if (timelineContainer) {
+                timelineContainer.style.cssText = `
+                    height: auto !important;
+                    max-height: none !important;
+                    overflow: visible !important;
+                `;
+            }
+            
+            document.body.appendChild(timelineClone);
+            
+            // Get the actual height after rendering
+            const actualHeight = timelineClone.scrollHeight;
+            
+            // Use html2canvas with the correct dimensions
+            html2canvas(timelineClone, {
+                backgroundColor: '#0f0a20',
+                scale: 2,
+                logging: false,
+                width: 800,
+                height: actualHeight,
+                windowHeight: actualHeight,
+                onclone: function(clonedDoc) {
+                    // Ensure all content is visible in the cloned document
+                    const clonedTimeline = clonedDoc.querySelector('#timeline');
+                    if (clonedTimeline) {
+                        clonedTimeline.style.height = actualHeight + 'px';
+                    }
+                }
+            }).then(canvas => {
+                // Convert the canvas to a data URL and trigger download
+                const url = canvas.toDataURL('image/png');
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'my_circadian_timeline.png';
+                document.body.appendChild(a);
+                a.click();
+                
+                // Clean up
+                document.body.removeChild(timelineClone);
+                document.body.removeChild(a);
+            }).catch(error => {
+                console.error('Error generating PNG:', error);
+                alert('There was an error generating the PNG. Please try again.');
+            });
+        }
+
+        // Remove calendar sync functions
+        function syncWithGoogle() {}
+        function syncWithOutlook() {}
+        function syncWithApple() {}
+        function createCalendarEvents() {}
+        function showSyncStatus() {}
+
+        function showTerms(event) {
+            event.preventDefault();
+            document.getElementById('termsModal').style.display = 'flex';
+        }
+
+        function closeTerms() {
+            document.getElementById('termsModal').style.display = 'none';
+        }
+
+        // Update window click handler to close both modals
+        window.onclick = function(event) {
+            if (event.target.classList.contains('privacy-modal')) {
+                event.target.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>

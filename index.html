@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><!-- Google tag (gtag.js) -->
+<head>
+    <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KT51JH936H"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -9,6 +10,7 @@
 
   gtag('config', 'G-KT51JH936H');
 </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SleepSyncer - Optimize Your Sleep & Sync Your Schedule 🌙</title>
@@ -1192,6 +1194,84 @@
                 margin-left: 20px !important;
             }
         }
+
+        .cycle-duration-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .cycle-duration-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #f0f0f0;
+            text-align: center;
+        }
+
+        .cycle-duration-input {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .cycle-duration-input input {
+            background-color: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 215, 0, 0.2);
+            color: #f0f0f0;
+            padding: 1rem;
+            font-size: 1.5rem;
+            border-radius: 12px;
+            width: 120px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .cycle-duration-input input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.2);
+            transform: scale(1.05);
+        }
+
+        .cycle-duration-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .info-icon {
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .cycle-duration-selector {
+                padding: 1.5rem;
+                margin: 1.5rem 0;
+            }
+
+            .cycle-duration-label {
+                font-size: 1rem;
+            }
+
+            .cycle-duration-input input {
+                font-size: 1.2rem;
+                padding: 0.75rem;
+                width: 100px;
+            }
+
+            .cycle-duration-info {
+                font-size: 0.8rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1245,6 +1325,17 @@
                             <option value="AM">AM</option>
                             <option value="PM">PM</option>
                         </select>
+                    </div>
+
+                    <div class="cycle-duration-selector">
+                        <label for="cycleDuration" class="cycle-duration-label">Sleep Cycle Duration (minutes):</label>
+                        <div class="cycle-duration-input">
+                            <input type="number" id="cycleDuration" min="60" max="120" value="90" step="5">
+                            <div class="cycle-duration-info">
+                                <span class="info-icon">ℹ️</span>
+                                <span class="info-text">Default is 90 minutes. Typical range is 70-120 minutes.</span>
+                            </div>
+                        </div>
                     </div>
 
                     <button class="calculate-btn" onclick="calculateCycles()">Calculate My Sleep Schedule</button>
@@ -1709,7 +1800,7 @@
 
             let inputMinutesPastMidnight = (hours * 60) + minutes;
 
-            const sleepCycleDuration = 90; // minutes
+            const sleepCycleDuration = parseInt(document.getElementById('cycleDuration').value) || 90; // minutes
             const timeToFallAsleep = 14; // minutes
 
             let sleepWakeSuggestions = [];
@@ -1945,6 +2036,7 @@
             const minuteInput = document.getElementById('minuteInput');
             const ampmSelect = document.getElementById('ampmSelect');
             const timeInput = document.getElementById('inputTime');
+            const cycleDurationInput = document.getElementById('cycleDuration');
             
             // Set default time to 6:00 AM
             hourInput.value = '6';
@@ -1956,6 +2048,13 @@
             hourInput.addEventListener('input', updateTime);
             minuteInput.addEventListener('input', updateTime);
             ampmSelect.addEventListener('change', updateTime);
+            
+            // Add cycle duration validation
+            cycleDurationInput.addEventListener('input', function() {
+                let val = parseInt(this.value) || 90;
+                val = Math.min(120, Math.max(60, val));
+                this.value = val;
+            });
 
             // Add input validation
             hourInput.addEventListener('blur', function() {
